@@ -3,12 +3,39 @@ import { Link, useNavigate } from 'react-router-dom';
 
 
 const AdminLogin= () => {
+    const[em, changeEm] = React.useState("caltech@gmail.com")
+
+    const[result, chnageResult] = React.useState({
+        Resultemail:'',
+        Resultpassword:''
+    })
+
+    
     const navigate = useNavigate();
     const[adminDetails, changeDetails] = React.useState({
         email:"",
         password:""
     })
     console.log(adminDetails);
+
+    //use effect
+    React.useEffect(function(){
+        console.log(em)
+        fetch(`http://localhost:8080/${em}`)
+        .then(res=>res.json()
+        .then(data=> changeDetails(function(prev){
+
+            return {
+                
+                Resultemail:data.email,
+                Resultpassword:data.password
+
+            }
+
+
+        })))
+
+    },[em])
 
     //function to handle change i state
     function handleChange(event){
@@ -23,12 +50,22 @@ const AdminLogin= () => {
         
     }
 
-    const handleLogin = () => {
-        if((adminDetails.password ==='root') &&(adminDetails.email==='email@gmail.com')){
+    const handleLogin = (event) => {
+        event.preventDefault();
+        //
+        changeEm(function(prev){
+            return adminDetails.email
+        })
+        //
+        if((adminDetails.password ===result.Resultpassword) &&(adminDetails.email===result.Resultemail)){
             navigate('UploadType');
 
         }
         // Logic for handling login action
+        
+
+        
+        //end of logic
     };
 
     return (
