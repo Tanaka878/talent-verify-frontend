@@ -1,41 +1,67 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState ,useNavigate} from 'react';
 
 const BulkUpload = () => {
-  //dealing with convesrion
-function Conversion(){
-  const csvToJSON= require('csvtojson');
-  const fileSystem = require('fs');
+  const [file, setFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  csvToJSON.fromFile("").then(source=>{
-    console.log(source)
-  })
-
-}
-  
-
-
-    const navigation= useNavigate();
+  const navigation= useNavigate();
 
     function NavigateBack(){
         navigation('/UploadType');
 
     }
-    
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload-csv', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('CSV file uploaded successfully:', data);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error uploading CSV file:', error);
+      setError(error.message);
+      setIsLoading(false);
+    }
+  };
+
   return (
-
-    <div className='signup-container'>
-        <form>
-            <h1>File Upload</h1>
-            <input type='file' name='file' accept='.csv'/>
-            <button type="submit">Submit</button>
-            <button onClick={NavigateBack}>Back</button>
-
-
-        </form>
-      
+    <div>
+      <h2>CSV Uploader</h2>
+      <form onSubmit={handleSubmit}>
+        <input type="file" onChange={handleFileChange} />
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Uploading...' : 'Upload CSV'}
+        </button>
+        <button onClick={NavigateBack}>Back</button>
+      </form>
+      {error && <div>Error: {error}</div>}
     </div>
-  )
-}
+  );
+};
 
-export default BulkUpload
+export default BulkUpload;
+
+
+
+
+
+

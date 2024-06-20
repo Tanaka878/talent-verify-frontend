@@ -11,12 +11,17 @@ export const UploadType = () => {
         navigate('/SingleUpload');
     }
 
+    function Search(){
+      navigate('/SearchComponent');
+    }
+
   return (
     <div className='signup-container'>
         <h1>Talent-Verify</h1>
         <h1 >Please Select Upload Type :</h1>
         <button className='divs' onClick={Bulky}> Bulk Upload</button>
         <button onClick={Single} className='divs'> Single Upload</button>
+        <button onClick={Search} className='divs'>Search</button>
     </div>
   )
 }

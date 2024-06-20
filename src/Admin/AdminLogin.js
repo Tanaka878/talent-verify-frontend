@@ -19,23 +19,30 @@ const AdminLogin= () => {
     console.log(adminDetails);
 
     //use effect
-    React.useEffect(function(){
-        console.log(em)
+    React.useEffect(function() {
+        console.log(em);
+      
         fetch(`http://localhost:8080/${em}`)
-        .then(res=>res.json()
-        .then(data=> changeDetails(function(prev){
-
-            return {
-                
-                Resultemail:data.email,
-                Resultpassword:data.password
-
+          .then(res => {
+            if (!res.ok) {
+              throw new Error(`HTTP error ${res.status}`);
             }
-
-
-        })))
-
-    },[em])
+            return res.json();
+          })
+          .then(data => {
+            chnageResult(function(prev) {
+              return {
+                Resultemail: data.companyEmail,
+                Resultpassword: data.password
+               
+              };
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+            // Handle the error, e.g., display an error message to the user
+          });
+      }, [em]);
 
     //function to handle change i state
     function handleChange(event){
@@ -56,9 +63,13 @@ const AdminLogin= () => {
         changeEm(function(prev){
             return adminDetails.email
         })
+
+        console.log(result.Resultemail);
+        console.log("Loged");
         //
         if((adminDetails.password ===result.Resultpassword) &&(adminDetails.email===result.Resultemail)){
             navigate('UploadType');
+           
 
         }
         // Logic for handling login action
