@@ -30,7 +30,7 @@ export const SingleUpload = () => {
         event.preventDefault();
 
         try {
-            const response = await fetch('/api/employees', {
+            const response = await fetch('/single-upload', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
