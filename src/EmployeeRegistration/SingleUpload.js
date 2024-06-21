@@ -30,7 +30,7 @@ export const SingleUpload = () => {
         event.preventDefault();
 
         try {
-            const response = await fetch('/single-upload', {
+            const response = await fetch('http://localhost:8080/single-upload', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

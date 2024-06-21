@@ -9,6 +9,7 @@ const AdminLogin = () => {
   const [result, changeResult] = useState({
     Resultemail: '',
     Resultpassword: '',
+    error: null,
   });
   const navigate = useNavigate();
 
@@ -17,16 +18,30 @@ const AdminLogin = () => {
       try {
         const response = await fetch(`http://localhost:8080/${adminDetails.email}`);
         if (!response.ok) {
-          throw new Error(`HTTP error ${response.status}`);
+          if (response.status === 404) {
+            changeResult({
+              Resultemail: '',
+              Resultpassword: '',
+              error: 'User not found',
+            });
+          } else {
+            throw new Error(`HTTP error ${response.status}`);
+          }
+        } else {
+          const data = await response.json();
+          changeResult({
+            Resultemail: data.companyemail,
+            Resultpassword: data.password,
+            error: null,
+          });
         }
-        const data = await response.json();
-        changeResult({
-          Resultemail: data.companyemail,
-          Resultpassword: data.password,
-        });
       } catch (error) {
         console.error('Error fetching data:', error);
-        // Handle the error, e.g., display an error message to the user
+        changeResult({
+          Resultemail: '',
+          Resultpassword: '',
+          error: 'Error fetching data',
+        });
       }
     };
 
@@ -45,10 +60,12 @@ const AdminLogin = () => {
 
   const handleLogin = (event) => {
     event.preventDefault();
-    //console.log(adminDetails);
+    console.log(adminDetails);
     console.log(result);
 
-    if (adminDetails.password === result.Resultpassword && adminDetails.email === result.Resultemail) {
+    if (result.error) {
+      console.log(result.error);
+    } else if (adminDetails.password === result.Resultpassword && adminDetails.email === result.Resultemail) {
       navigate('UploadType');
       console.log('Logged in');
     } else {
@@ -66,6 +83,7 @@ const AdminLogin = () => {
         <input type="email" placeholder="email" name="email" required />
         <label>Password:</label>
         <input type="password" placeholder="password" name="password" required />
+        {result.error && <div style={{ color: 'red' }}>{result.error}</div>}
         <button type="submit">Login</button>
         <Link to={'/EmployerRegistration'}>Create Account</Link>
       </form>
