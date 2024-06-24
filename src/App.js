@@ -8,6 +8,7 @@ import BulkUpload from './EmployeeRegistration/BulkUpload';
 import { UploadType } from './EmployeeRegistration/UploadType';
 import { SingleUpload } from './EmployeeRegistration/SingleUpload';
 import SearchComponent from './Admin/SearchComponent';
+import UpdateDetails from './Admin/UpdateDetails';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route exact path='/UploadType' element={<UploadType/>}/>
           <Route exact path='/SingleUpload' element={<SingleUpload/>}/>
           <Route exact path='/SearchComponent' element={<SearchComponent/>}/>
+          <Route exact path='/UpdateDetails' element={<UpdateDetails/>}/>
         </Routes>
       </Router>
     </div>

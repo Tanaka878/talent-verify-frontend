@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -81,9 +81,84 @@ const ResultValue = styled.div`
   color: #555;
 `;
 
-const SearchComponent = () => {
+const UpdateDetails = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [fetchedData, setFetchedData] = useState(null);
+  //state for holding chnages or updates made in the form
+
+  const [formData, setFormData] = useState({
+  name: '',
+  surname: '',
+  department: '',
+  email: '',
+  roles: '',
+  startDate: '',
+  endDate: '',
+  tel: '',
+});
+
+// form handling function
+const handleFormChange = (event) => {
+  setFormData({
+    ...formData,
+    [event.target.name]: event.target.value,
+  });
+};
+
+
+//for handling sending form data to an external API
+
+const handleFormSubmit = async (event) => {
+  event.preventDefault();
+  try {
+    const response = await fetch(`http://localhost:8080/update/${fetchedData.email}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    if (response.ok) {
+      // Handle successful update
+      console.log(formData)
+      console.log('Employee details updated successfully');
+      // Reset the form data
+      setFormData({
+        name: '',
+        surname: '',
+        department: '',
+        email: '',
+        roles: '',
+        startDate: '',
+        endDate: '',
+        tel: '',
+      });
+    } else {
+      // Handle update error
+      console.error('Error updating employee details');
+    }
+  } catch (error) {
+    console.error('Error updating employee details:', error);
+  }
+};
+
+//handling integrating form changes
+useEffect(() => {
+  if (fetchedData) {
+    setFormData({
+      name: fetchedData.name,
+      surname: fetchedData.surname,
+      department: fetchedData.department,
+      email: fetchedData.email,
+      roles: fetchedData.roles,
+      startDate: fetchedData.startDate,
+      endDate: fetchedData.endDate,
+      tel: fetchedData.tel,
+    });
+  }
+}, [fetchedData]);
+
+//
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -144,8 +219,106 @@ const SearchComponent = () => {
           <div>Loading...</div>
         )}
       </ResultContainer>
+
+      <button>Update EndDate</button><div>
+  <h2>Update Employee Details</h2>
+  <form onSubmit={handleFormSubmit}>
+    {/* Form fields */}
+    <label>
+      Name:
+      <input
+        type="text"
+        name="name"
+        value={formData.name}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    {/*surname */}
+    <label>
+      Surname:
+      <input
+        type="text"
+        name="surname"
+        value={formData.surname}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    {/*roles*/}
+    <label>
+      Roles:
+      <input
+        type="text"
+        name="roles"
+        value={formData.roles}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    {/*startDate */}
+    <label>
+      Start Date:
+      <input
+        type="date"
+        name="startDate"
+        value={formData.startDate}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    {/*department*/}
+    <label>
+      Department:
+      <input
+        type="text"
+        name="department"
+        value={formData.department}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    {/*endDate */}
+    <label>
+      EndDate:
+      <input
+        type="date"
+        name="endDate"
+        value={formData.endDate}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    {/*email */}
+    <label>
+      Email:
+      <input
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleFormChange}
+      />
+    </label>
+
+    {/*tel */}
+    <label>
+      Tel:
+      <input
+        type="text"
+        name="tel"
+        value={formData.tel}
+        onChange={handleFormChange}
+      />
+    </label>
+    
+    <button type="submit">Update</button>
+  </form>
+</div>
+
+
     </Container>
   );
 };
 
-export default SearchComponent;
+export default UpdateDetails;
+
