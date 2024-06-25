@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const AdminLogin = () => {
+const AdminLogin = ({onMessageChange}) => {
   const [adminDetails, changeDetails] = useState({
     email: '',
     password: '',
@@ -12,6 +12,12 @@ const AdminLogin = () => {
     error: null,
   });
   const navigate = useNavigate();
+
+  //
+  useEffect(() => {
+    onMessageChange(adminDetails.email);
+  }, [adminDetails]);
+  //
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +74,13 @@ const AdminLogin = () => {
     } else if (adminDetails.password === result.Resultpassword && adminDetails.email === result.Resultemail) {
       navigate('UploadType');
       console.log('Logged in');
+      console.log(adminDetails.email);
+      //
+      
+      
+
+      
+      //
     } else {
       console.log('Invalid email or password');
     }
@@ -84,7 +97,7 @@ const AdminLogin = () => {
         <label>Password:</label>
         <input type="password" placeholder="password" name="password" required />
         {result.error && <div style={{ color: 'red' }}>{result.error}</div>}
-        <button type="submit">Login</button>
+        <button type="submit" >Login</button>
         <Link to={'/EmployerRegistration'}>Create Account</Link>
       </form>
     </div>

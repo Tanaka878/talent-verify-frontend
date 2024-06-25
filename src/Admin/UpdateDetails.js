@@ -81,10 +81,11 @@ const ResultValue = styled.div`
   color: #555;
 `;
 
-const UpdateDetails = () => {
+const UpdateDetails = (props) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [fetchedData, setFetchedData] = useState(null);
   //state for holding chnages or updates made in the form
+  console.log('FRom Update' , props.newMessage)
 
   const [formData, setFormData] = useState({
   name: '',
@@ -95,6 +96,7 @@ const UpdateDetails = () => {
   startDate: '',
   endDate: '',
   tel: '',
+  companyemail:props.newMessage
 });
 
 // form handling function
@@ -132,6 +134,7 @@ const handleFormSubmit = async (event) => {
         startDate: '',
         endDate: '',
         tel: '',
+        companyemail:props.companyemail
       });
     } else {
       // Handle update error
@@ -154,6 +157,7 @@ useEffect(() => {
       startDate: fetchedData.startDate,
       endDate: fetchedData.endDate,
       tel: fetchedData.tel,
+      companyemail : fetchedData.companyemail
     });
   }
 }, [fetchedData]);
@@ -166,7 +170,7 @@ useEffect(() => {
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/getEmployees/${searchTerm}`);
+      const response = await fetch(`http://localhost:8080/getEmployees/${searchTerm}/${props.newMessage}`);
       if (response.ok) {
         const data = await response.json();
         setFetchedData(data);
@@ -213,6 +217,8 @@ useEffect(() => {
               <ResultValue>{fetchedData.endDate}</ResultValue>
               <ResultLabel>Tel:</ResultLabel>
               <ResultValue>{fetchedData.tel}</ResultValue>
+              <ResultLabel>Company Email:</ResultLabel>
+              <ResultValue>{props.companyemail}</ResultValue>
             </ResultItem>
           )
         ) : (

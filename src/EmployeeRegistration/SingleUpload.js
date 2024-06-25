@@ -1,8 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
-export const SingleUpload = () => {
+export const SingleUpload = (props) => {
     const navigate = useNavigate();
+    console.log('Single Upload',props.newMessage)
+   
+    
     const[employeeDetails, changeDetails] = React.useState({
         name:'',
         surname:'',
@@ -11,7 +14,8 @@ export const SingleUpload = () => {
         roles:'',
         startDate:'',
         endDate:'',
-        tel:''
+        tel:'',
+        companyemail:props.newMessage
     });
 
     console.log(employeeDetails);
@@ -40,7 +44,8 @@ export const SingleUpload = () => {
 
             if (response.ok) {
                 console.log('Employee details uploaded successfully');
-                // You can add additional logic here, such as redirecting the user or displaying a success message
+               
+                
             } else {
                 console.error('Error uploading employee details:', response.status);
             }
